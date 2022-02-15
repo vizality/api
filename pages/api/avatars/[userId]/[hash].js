@@ -6,6 +6,7 @@
  * It is cached for one year.
  */
 
+import fetch from 'node-fetch';
 import Cors from 'cors';
 
 /**
@@ -80,6 +81,7 @@ export default async function handler (req, res) {
       res.setHeader('Content-Type', response.headers.get('content-type'));
       res.setHeader('Content-Length', response.headers.get('content-length'));
       res.setHeader('Cache-Control', 'public, max-age=31536000, must-revalidate');
+
       return res.send(buffer);
     }
     return res.status(500).send({ error: 'User ID is required.' });

@@ -4,6 +4,7 @@
  */
 
 import { fetchUser } from '#discord';
+import fetch from 'node-fetch';
 import Cors from 'cors';
 
 /**
