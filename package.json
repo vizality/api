@@ -1,18 +1,18 @@
 {
-  "name": "vizality-website",
+  "name": "vizality-api",
   "version": "1.0.0",
   "homepage": "https://vizality.com",
   "license": "UNLICENSED",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vizality/website.git"
+    "url": "https://github.com/vizality/api.git"
   },
   "bugs": {
-    "url": "https://github.com/vizality/website/issues",
-    "email": "contact@vizality.com"
+    "url": "https://github.com/vizality/api/issues",
+    "email": "api@vizality.com"
   },
   "author": {
-    "name": "dperolio",
+    "name": "Dustin Perolio",
     "email": "contact@vizality.com",
     "url": "https://dperolio.com"
   },
@@ -25,16 +25,11 @@
     "#discord": "./utils/discord.js"
   },
   "dependencies": {
-    "@emotion/react": "^11.7.1",
-    "@emotion/styled": "^11.6.0",
     "@octokit/auth-oauth-app": "^4.3.0",
     "@octokit/rest": "^18.12.0",
-    "classnames": "^2.3.1",
     "cors": "^2.8.5",
     "next": "^12.0.10",
-    "next-seo": "^5.1.0",
-    "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "next-seo": "^5.1.0"
   },
   "devDependencies": {
     "encoding": "^0.1.13",
@@ -43,7 +38,6 @@
     "eslint-plugin-jsdoc": "^37.9.1",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.28.0",
-    "eslint-plugin-react-hooks": "^4.3.0",
-    "sass": "^1.49.7"
+    "eslint-plugin-react-hooks": "^4.3.0"
   }
 }
