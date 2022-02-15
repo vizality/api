@@ -61,7 +61,7 @@ export default async function handler (req, res) {
       if (!response.ok) {
         response = await fetch(`https://cdn.discordapp.com/avatars/${userId}/${hash}.png?size=512`);
         if (!response.ok) {
-          response = await fetch(`https://vizality.com/api/discord/avatars/${userId}`);
+          response = await fetch(`/avatars/${userId}`);
           if (!response.ok) {
             return res.status(500).send({ error: 'User not found.' });
           }

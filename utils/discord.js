@@ -1,5 +1,3 @@
-import fetch from 'node-fetch';
-
 const API_ENDPOINT = 'https://discord.com/api';
 
 const options = {
