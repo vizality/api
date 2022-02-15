@@ -43,12 +43,11 @@ export default async function handler (req, res) {
      */
     await runMiddleware(req, res, cors);
 
-    return res.status(200).json({
-      message: 'Yes'
+    return res.status(404).json({
+      message: 'User ID Required',
+      documentation_url: 'https://docs.vizality.com/rest/reference/users#get-a-user'
     });
   } catch (err) {
-    return res.status(500).json({
-      message: 'Server Error'
-    });
+    return res.status(500).json({ message: 'Server Error' });
   }
 }

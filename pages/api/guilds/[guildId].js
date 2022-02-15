@@ -1,3 +1,7 @@
+/**
+ *
+ */
+
 import Cors from 'cors';
 
 /**
@@ -10,6 +14,10 @@ const cors = Cors({
 /**
  * Helper method to wait for a middleware to execute before continuing.
  * And to throw an error when an error happens in a middleware.
+ * @param {Request} req The request object.
+ * @param {Response} res The response object.
+ * @param {Function} fn The middleware function to execute.
+ * @returns {Promise}
  */
 function runMiddleware (req, res, fn) {
   return new Promise((resolve, reject) => {
@@ -22,11 +30,25 @@ function runMiddleware (req, res, fn) {
   });
 }
 
+/**
+ * Handles the request.
+ * @param {Request} req The request object.
+ * @param {Response} res The response object.
+ * @returns {Promise<void>}
+ */
 export default async function handler (req, res) {
-  /**
-   * Run the middleware.
-   */
-  await runMiddleware(req, res, cors);
+  try {
+    /**
+     * Run the middleware.
+     */
+    await runMiddleware(req, res, cors);
 
-  res.status(200).json({ message: 'yes' });
+    return res.status(200).json({
+      message: 'Yes'
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: 'Server Error'
+    });
+  }
 }

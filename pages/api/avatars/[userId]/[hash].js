@@ -64,7 +64,10 @@ export default async function handler (req, res) {
         if (!response.ok) {
           response = await fetch(`/avatars/${userId}`);
           if (!response.ok) {
-            return res.status(500).send({ error: 'User not found.' });
+            return res.status(404).send({
+              message: 'User Not Found',
+              documentation_url: 'https://docs.vizality.com/rest/reference/users#get-a-user'
+            });
           }
         }
       }
@@ -84,9 +87,10 @@ export default async function handler (req, res) {
 
       return res.send(buffer);
     }
-    return res.status(500).send({ error: 'User ID is required.' });
   } catch (err) {
-    return res.status(500).json({ error: 'Something went wrong retrieving the data.' });
+    return res.status(500).json({
+      message: 'Server Error'
+    });
   }
 }
 
