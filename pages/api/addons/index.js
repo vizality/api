@@ -64,8 +64,8 @@ function runMiddleware (req, res, fn) {
  */
 export const generateAddonsList = async () => {
   const addons = {
-    plugins: {},
-    themes: {}
+    plugins: [],
+    themes: []
   };
 
   const org = await github.repos
@@ -87,7 +87,7 @@ export const generateAddonsList = async () => {
     if (repoTopics?.data?.names?.includes('plugin')) type = 'plugins';
     if (repoTopics?.data?.names?.includes('theme')) type = 'themes';
     const tags = repoTopics?.data?.names?.filter(d => d !== 'plugin' && d !== 'theme' && d !== 'vizality');
-    const _addon = addons[type][addon.name] = {};
+    const _addon = {};
     _addon.repo = addon.html_url;
     _addon.raw = `https://raw.githubusercontent.com/${addon.full_name}/${addon.default_branch}`;
     _addon.git = addon.clone_url;
@@ -166,6 +166,7 @@ export const generateAddonsList = async () => {
       }
     }
     _addon.stars = addon.stargazers_count || 0;
+    addons[type].push(_addon);
   }
   return addons;
 };
