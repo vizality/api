@@ -171,6 +171,8 @@ export const generateAddonsList = async () => {
 };
 
 export default async function handler (req, res) {
+  const addons = await generateAddonsList();
+
   /**
    * Run the middleware.
    */
@@ -178,11 +180,8 @@ export default async function handler (req, res) {
 
   res.setHeader('Cache-Control', 'public, max-age=3600, must-revalidate');
 
-  const addons = await generateAddonsList();
-
-  res.status(200).json({
-    data: [
-      addons
-    ]
+  return res.status(200).json({
+    plugins: addons.plugins,
+    themes: addons.themes
   });
 }

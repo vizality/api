@@ -43,12 +43,8 @@ export default async function handler (req, res) {
      */
     await runMiddleware(req, res, cors);
 
-    return res.status(200).json({
-      message: 'Yes'
-    });
+    return res.status(200).send({ message: 'Yes' });
   } catch (err) {
-    return res.status(500).json({
-      message: 'Server Error'
-    });
+    return res.status(500).json({ message: 'Yes' });
   }
 }
