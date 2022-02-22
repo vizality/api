@@ -1,7 +1,11 @@
 /**
- *
+ * Fetch the user's current avatar, converts it to a buffer, and returns it.
+ * This can be used to always get the user's current avatar. It is cached for one hour.
+ * @description
  */
 
+import { fetchUser } from '#discord';
+import fetch from 'node-fetch';
 import Cors from 'cors';
 
 /**
@@ -43,11 +47,53 @@ export default async function handler (req, res) {
      */
     await runMiddleware(req, res, cors);
 
-    return res.status(404).json({
-      message: 'User ID Required',
+    const { userId } = req.query;
+    const user = await fetchUser(userId);
+
+    /**
+     * Check if a user is found.
+     */
+    if (user) {
+      let endpoint;
+
+      /**
+       * Check if the user has a custom avatar.
+       */
+      if (user.avatar) {
+        const extension = user.avatar.startsWith('a_') ? 'gif' : 'png';
+        endpoint = `https://cdn.discordapp.com/avatars/${userId}/${user.avatar}.${extension}?size=512`;
+
+      /**
+       * If they don't have a custom avatar, determine what default to use based on their discriminator.
+       */
+      } else {
+        endpoint = `https://cdn.discordapp.com/embed/avatars/${user.discriminator % 5}.png`;
+      }
+
+      /**
+       * Fetch the endpoint and convert it to an image buffer.
+       */
+      const response = await fetch(endpoint);
+      const arrayBuffer = await response.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      /**
+       * Set the response headers.
+       */
+      res.setHeader('Content-Type', response.headers.get('content-type'));
+      res.setHeader('Content-Length', response.headers.get('content-length'));
+      res.setHeader('Cache-Control', 'public, max-age=3600, must-revalidate');
+
+      return res.send(buffer);
+    }
+
+    return res.status(404).send({
+      message: 'Not Found',
       documentation_url: 'https://docs.vizality.com/rest/reference/users#get-a-user'
     });
   } catch (err) {
-    return res.status(500).json({ message: 'Server Error' });
+    return res.status(500).json({
+      message: 'Server Error'
+    });
   }
 }
