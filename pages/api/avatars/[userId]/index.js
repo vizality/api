@@ -76,8 +76,7 @@ export default async function handler (req, res) {
       const response = await fetch(endpoint);
 
       /**
-       * If all else fails and there isn't an "ok" response, let's assume the the provided
-       * user ID is incorrect.
+       * If there isn't an "ok" response, let's assume the provided user ID is incorrect.
        */
       if (!response?.ok) {
         /**
