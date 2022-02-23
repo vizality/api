@@ -74,6 +74,27 @@ export default async function handler (req, res) {
        * Fetch the endpoint and convert it to an image buffer.
        */
       const response = await fetch(endpoint);
+
+      /**
+       * If all else fails and there isn't an "ok" response, let's assume the the provided
+       * user ID is incorrect.
+       */
+      if (!response?.ok) {
+        /**
+         * Set the response headers.
+         */
+        res.setHeader('content-type', 'application/json');
+        res.setHeader('cache-control', 'public, max-age=3600, must-revalidate');
+
+        return res.status(404).send({
+          message: 'User Not Found',
+          documentation_url: 'https://docs.vizality.com/rest/reference/users#get-a-user'
+        });
+      }
+
+      /**
+       * Convert the response into an image buffer.
+       */
       const arrayBuffer = await response.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
 

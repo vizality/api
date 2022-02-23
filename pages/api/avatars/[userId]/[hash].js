@@ -58,22 +58,33 @@ export default async function handler (req, res) {
        * Fetch the endpoint and convert it to an image buffer.
        */
       let response;
-      response = await fetch(`https://cdn.discordapp.com/avatars/${userId}/${hash}.gif?size=512`);
-      if (!response.ok) {
-        response = await fetch(`https://cdn.discordapp.com/avatars/${userId}/${hash}.png?size=512`);
-        if (!response.ok) {
-          response = await fetch(`/avatars/${userId}`);
-          if (!response.ok) {
-            return res.status(404).send({
-              message: 'User Not Found',
-              documentation_url: 'https://docs.vizality.com/rest/reference/users#get-a-user'
-            });
-          }
+      response = await fetch(`https://cdn.discordapp.com/avatars/${userId}/${hash}.gif?size=512`).catch(() => void 0);
+      if (!response?.ok) {
+        response = await fetch(`https://cdn.discordapp.com/avatars/${userId}/${hash}.png?size=512`).catch(() => void 0);
+        if (!response?.ok) {
+          response = await fetch(`https://api.vizality.com/avatars/${userId}`);
         }
       }
 
       /**
-       * Convert the response to an image buffer.
+       * If all else fails and there isn't an "ok" response, let's assume the the provided
+       * user ID is incorrect.
+       */
+      if (!response?.ok) {
+        /**
+         * Set the response headers.
+         */
+        res.setHeader('content-type', 'application/json');
+        res.setHeader('cache-control', 'public, max-age=3600, must-revalidate');
+
+        return res.status(404).send({
+          message: 'User Not Found',
+          documentation_url: 'https://docs.vizality.com/rest/reference/users#get-a-user'
+        });
+      }
+
+      /**
+       * Convert the response into an image buffer.
        */
       const arrayBuffer = await response.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
@@ -81,9 +92,9 @@ export default async function handler (req, res) {
       /**
        * Set the response headers.
        */
-      res.setHeader('Content-Type', response.headers.get('content-type'));
-      res.setHeader('Content-Length', response.headers.get('content-length'));
-      res.setHeader('Cache-Control', 'public, max-age=31536000, must-revalidate');
+      res.setHeader('content-type', response.headers.get('content-type') || 'application/json');
+      res.setHeader('content-length', response.headers.get('content-length'));
+      res.setHeader('cache-control', 'public, max-age=31536000, must-revalidate');
 
       return res.send(buffer);
     }
