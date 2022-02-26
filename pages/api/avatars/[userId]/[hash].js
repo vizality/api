@@ -90,7 +90,7 @@ export default async function handler (req, res) {
       /**
        * Set the response headers.
        */
-      res.setHeader('content-type', response.headers.get('content-type') || 'application/json');
+      res.setHeader('content-type', response.headers.get('content-type'));
       res.setHeader('content-length', response.headers.get('content-length'));
       res.setHeader('cache-control', 'public, max-age=31536000, must-revalidate');
 

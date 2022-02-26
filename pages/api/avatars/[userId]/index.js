@@ -100,9 +100,9 @@ export default async function handler (req, res) {
       /**
        * Set the response headers.
        */
-      res.setHeader('Content-Type', response.headers.get('content-type'));
-      res.setHeader('Content-Length', response.headers.get('content-length'));
-      res.setHeader('Cache-Control', 'public, max-age=3600, must-revalidate');
+      res.setHeader('content-type', response.headers.get('content-type'));
+      res.setHeader('content-length', response.headers.get('content-length'));
+      res.setHeader('cache-control', 'public, max-age=3600, must-revalidate');
 
       return res.send(buffer);
     }
