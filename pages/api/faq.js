@@ -84,20 +84,20 @@ export default async function handler (req, res) {
      * the correct categories.
      */
     const categoryIndexes = [];
-    result.forEach((item, index) => {
-      if (index !== 0 && item.type === 'heading_open' && item.markup === '##' && result[index + 1].content !== 'Table of Contents') {
+    for (const [ index, item ] of result.entries()) {
+      if (item.type === 'heading_open' && item.tag === 'h2' && result[index + 1].content !== 'Table of Contents') {
         categoryIndexes.push(index);
       }
-    });
+    }
 
     /**
      * Iterate through the results again.
      */
-    result.forEach((item, index) => {
+    for (const [ index, item ] of result.entries()) {
       /**
        * If it's a level 2 heading, and not the Table of Contents, proceed
        */
-      if (index !== 0 && item.type === 'heading_open' && item.markup === '##' && result[index + 1].content !== 'Table of Contents') {
+      if (item.type === 'heading_open' && item.tag === 'h2' && result[index + 1].content !== 'Table of Contents') {
         const dataItem = {
           category: result[index + 1].content,
           items: []
@@ -106,18 +106,21 @@ export default async function handler (req, res) {
         /**
          * Iterate through the results yet again.
          */
-        result.forEach((itm, i) => {
+        for (const [ i, itm ] of result.entries()) {
           /**
            * If it's a level 3 heading, assume it's a question item, and then check this
            * loop's index with the outer loop's index, to determine which category the
-           * question belongs with.
+           * question belongs with, making sure the child index is between the index of
+           * the current category and the next categpry. If no next category index is found,
+           * assume the current category is the last category and use the length of the
+           * results array instead.
            */
-          if (itm.type === 'heading_open' && itm.markup === '###' && i > index + 1 && (i < categoryIndexes[categoryIndexes.indexOf(index) + 1] || (!categoryIndexes[categoryIndexes.indexOf(index) + 1] && i <= result.length - 1))) {
+          if (itm.type === 'heading_open' && itm.tag === 'h3' && i > index + 1 && (i < categoryIndexes[categoryIndexes.indexOf(index) + 1] || (!categoryIndexes[categoryIndexes.indexOf(index) + 1] && i <= result.length - 1))) {
             /**
              * Get the question number, including the period.
              */
-            const numberWithPeriod = result[i + 1].content.match(/(\d+. )/)[0];
-            const number = Number(numberWithPeriod.replace('. ', ''));
+            const numberWithPeriodAndSpace = result[i + 1].content.match(/(\d+. )/)[0];
+            const number = Number(numberWithPeriodAndSpace.replace('. ', ''));
 
             /**
              * Make the question number, question, and answer an object, and push that into
@@ -125,14 +128,15 @@ export default async function handler (req, res) {
              */
             dataItem.items.push({
               number,
-              question: result[i + 1].content.replace(numberWithPeriod, ''),
+              question: result[i + 1].content.replace(numberWithPeriodAndSpace, ''),
               answer: result[i + 4].content
             });
           }
-        });
+        }
+
         output.data.push(dataItem);
       }
-    });
+    }
 
     return res.status(500).json(output);
   } catch (err) {
