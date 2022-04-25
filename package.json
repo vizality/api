@@ -28,6 +28,7 @@
     "@octokit/auth-oauth-app": "^4.3.0",
     "@octokit/rest": "^18.12.0",
     "cors": "^2.8.5",
+    "markdown-it": "^13.0.0",
     "next": "^12.0.10",
     "next-seo": "^5.1.0"
   },
