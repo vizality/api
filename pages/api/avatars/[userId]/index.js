@@ -21,7 +21,7 @@ const cors = Cors({
  * @param {Request} req The request object.
  * @param {Response} res The response object.
  * @param {Function} fn The middleware function to execute.
- * @returns {Promise}
+ * @returns {Promise<any>}
  */
 function runMiddleware (req, res, fn) {
   return new Promise((resolve, reject) => {
@@ -47,6 +47,11 @@ export default async function handler (req, res) {
      */
     await runMiddleware(req, res, cors);
 
+    /**
+     * Split the end of the URL by . and use the portion before. This enables you to link
+     * the route with .gif added, for instance, which is parsed by Discord to show as an
+     * animated GIF in chat.
+     */
     const userId = req.query.userId.split('.')[0];
     const user = await fetchUser(userId);
 
