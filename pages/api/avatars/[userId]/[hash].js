@@ -48,7 +48,8 @@ export default async function handler (req, res) {
      */
     await runMiddleware(req, res, cors);
 
-    const { userId, hash } = req.query;
+    const { userId } = req.query;
+    const hash = req.query.hash.split('.')[0];
 
     /**
      * Make sure a user ID is provided.

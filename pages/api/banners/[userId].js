@@ -46,7 +46,7 @@ export default async function handler (req, res) {
      */
     await runMiddleware(req, res, cors);
 
-    const { userId } = req.query;
+    const userId = req.query.userId.split('.')[0];
 
     const user = await fetchUser(userId);
     /**
