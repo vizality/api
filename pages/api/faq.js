@@ -138,6 +138,10 @@ export default async function handler (req, res) {
       }
     }
 
+    if (output.length) {
+      return output;
+    }
+
     return res.status(500).json(output);
   } catch (err) {
     return res.status(500).json({
